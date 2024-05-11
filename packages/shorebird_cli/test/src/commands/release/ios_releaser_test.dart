@@ -4,6 +4,7 @@ import 'package:mocktail/mocktail.dart';
 import 'package:path/path.dart' as p;
 import 'package:platform/platform.dart';
 import 'package:scoped/scoped.dart';
+import 'package:shorebird_cli/src/args/args.dart';
 import 'package:shorebird_cli/src/artifact_builder.dart';
 import 'package:shorebird_cli/src/artifact_manager.dart';
 import 'package:shorebird_cli/src/code_push_client_wrapper.dart';
@@ -192,7 +193,7 @@ void main() {
                     any(named: 'supportedOperatingSystems'),
               ),
             ).thenAnswer((_) async {});
-            when(() => argResults['flutter-version']).thenReturn('3.0.0');
+            when(() => argResults[flutterVersionCliArg]).thenReturn('3.0.0');
           });
 
           test('logs error and exits with code 64', () async {
@@ -254,7 +255,7 @@ void main() {
         setUp(() {
           xcarchiveDirectory = Directory.systemTemp.createTempSync();
           iosAppDirectory = Directory.systemTemp.createTempSync();
-          when(() => argResults['codesign']).thenReturn(true);
+          when(() => argResults[codesignCliArg]).thenReturn(true);
           when(
             () => artifactBuilder.buildIpa(
               codesign: any(named: 'codesign'),
@@ -284,7 +285,7 @@ void main() {
 
         group('when not codesigning', () {
           setUp(() {
-            when(() => argResults['codesign']).thenReturn(false);
+            when(() => argResults[codesignCliArg]).thenReturn(false);
           });
 
           test('logs warning about patching', () async {
@@ -571,7 +572,7 @@ void main() {
         late Directory iosAppDirectory;
 
         setUp(() {
-          when(() => argResults['codesign']).thenReturn(codesign);
+          when(() => argResults[codesignCliArg]).thenReturn(codesign);
 
           xcarchiveDirectory = Directory.systemTemp.createTempSync();
           iosAppDirectory = Directory.systemTemp.createTempSync();
@@ -625,7 +626,7 @@ void main() {
               .thenReturn(operatingSystemVersion);
           when(() => xcodeBuild.version())
               .thenAnswer((_) async => xcodeVersion);
-          when(() => argResults['flutter-version'])
+          when(() => argResults[flutterVersionCliArg])
               .thenReturn(flutterVersionOverride);
         });
 
@@ -658,7 +659,7 @@ void main() {
 
         group('when codesigning', () {
           setUp(() {
-            when(() => argResults['codesign']).thenReturn(true);
+            when(() => argResults[codesignCliArg]).thenReturn(true);
           });
 
           group('when no ipa found', () {
@@ -704,7 +705,7 @@ To upload to the App Store, do one of the following:
 
         group('when not codesigning', () {
           setUp(() {
-            when(() => argResults['codesign']).thenReturn(false);
+            when(() => argResults[codesignCliArg]).thenReturn(false);
           });
 
           test('prints xcarchive upload steps', () {

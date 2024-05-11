@@ -2,6 +2,7 @@ import 'package:args/args.dart';
 import 'package:mason_logger/mason_logger.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:scoped/scoped.dart';
+import 'package:shorebird_cli/src/args/args.dart';
 import 'package:shorebird_cli/src/cache.dart';
 import 'package:shorebird_cli/src/code_push_client_wrapper.dart';
 import 'package:shorebird_cli/src/commands/release/release.dart';
@@ -90,8 +91,8 @@ void main() {
       shorebirdEnv = MockShorebirdEnv();
       shorebirdFlutter = MockShorebirdFlutter();
 
-      when(() => argResults['dry-run']).thenReturn(false);
-      when(() => argResults['platforms']).thenReturn(['android']);
+      when(() => argResults[dryRunCliArg]).thenReturn(false);
+      when(() => argResults[platformsCliArg]).thenReturn(['android']);
       when(() => argResults.wasParsed(any())).thenReturn(true);
 
       when(cache.updateAll).thenAnswer((_) async => {});
@@ -242,7 +243,7 @@ Note: ${lightCyan.wrap('shorebird patch --platforms=android')} without the --rel
 
     group('when dry-run is specified', () {
       setUp(() {
-        when(() => argResults['dry-run']).thenReturn(true);
+        when(() => argResults[dryRunCliArg]).thenReturn(true);
       });
 
       test('does not publish release', () async {
@@ -291,8 +292,8 @@ Note: ${lightCyan.wrap('shorebird patch --platforms=android')} without the --rel
       const target = 'test-target';
 
       setUp(() {
-        when(() => argResults['flavor']).thenReturn(flavor);
-        when(() => argResults['target']).thenReturn(target);
+        when(() => argResults[flavorCliArg]).thenReturn(flavor);
+        when(() => argResults[targetCliArg]).thenReturn(target);
       });
 
       test('executes commands in order, completes successfully', () async {
@@ -398,7 +399,7 @@ Note: ${lightCyan.wrap('shorebird patch --platforms=android --flavor=$flavor --t
     group('when flutter-version is provided', () {
       const flutterVersion = '3.16.3';
       setUp(() {
-        when(() => argResults['flutter-version']).thenReturn(flutterVersion);
+        when(() => argResults[flutterVersionCliArg]).thenReturn(flutterVersion);
       });
 
       group('when unable to determine flutter revision', () {

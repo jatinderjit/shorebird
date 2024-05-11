@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:mason_logger/mason_logger.dart';
 import 'package:path/path.dart' as p;
+import 'package:shorebird_cli/src/args/args.dart';
 import 'package:shorebird_cli/src/artifact_builder.dart';
 import 'package:shorebird_cli/src/command.dart';
 import 'package:shorebird_cli/src/logger.dart';
@@ -23,7 +24,7 @@ class BuildAarCommand extends ShorebirdCommand {
         // `flutter build aar` defaults to a build number of 1.0, so we do the
         // same.
         .addOption(
-      'build-number',
+      buildNumberCliArg,
       help: 'The build number of the aar',
       defaultsTo: '1.0',
     );
@@ -51,7 +52,7 @@ class BuildAarCommand extends ShorebirdCommand {
       return ExitCode.config.code;
     }
 
-    final buildNumber = results['build-number'] as String;
+    final buildNumber = results[buildNumberCliArg] as String;
     final buildProgress = logger.progress('Building aar');
     try {
       await artifactBuilder.buildAar(

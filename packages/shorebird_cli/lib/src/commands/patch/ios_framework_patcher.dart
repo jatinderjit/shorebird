@@ -6,6 +6,7 @@ import 'package:platform/platform.dart';
 import 'package:shorebird_cli/src/archive/directory_archive.dart';
 import 'package:shorebird_cli/src/archive_analysis/archive_differ.dart';
 import 'package:shorebird_cli/src/archive_analysis/ios_archive_differ.dart';
+import 'package:shorebird_cli/src/args/args.dart';
 import 'package:shorebird_cli/src/artifact_builder.dart';
 import 'package:shorebird_cli/src/artifact_manager.dart';
 import 'package:shorebird_cli/src/code_push_client_wrapper.dart';
@@ -70,7 +71,7 @@ class IosFrameworkPatcher extends Patcher {
 
   @override
   Future<void> assertArgsAreValid() async {
-    if (!argResults.wasParsed('release-version')) {
+    if (!argResults.wasParsed(releaseVersionCliArg)) {
       logger.err('Missing required argument: --release-version');
       exit(ExitCode.usage.code);
     }

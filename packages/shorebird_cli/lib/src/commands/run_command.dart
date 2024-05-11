@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:shorebird_cli/src/args/args.dart';
 import 'package:shorebird_cli/src/command.dart';
 import 'package:shorebird_cli/src/doctor.dart';
 import 'package:shorebird_cli/src/logger.dart';
@@ -22,7 +23,7 @@ class RunCommand extends ShorebirdCommand {
         help: 'Target device id or name.',
       )
       ..addOption(
-        'target',
+        targetCliArg,
         abbr: 't',
         help: 'The main entrypoint file of the application.',
       )
@@ -36,7 +37,7 @@ class RunCommand extends ShorebirdCommand {
         valueHelp: 'foo=bar',
       )
       ..addOption(
-        'flavor',
+        flavorCliArg,
         help: 'The product flavor to use when building the app.',
       );
   }
@@ -72,8 +73,8 @@ Please use "shorebird preview" instead.''',
     logger.info('Running app...');
 
     final deviceId = results['device-id'] as String?;
-    final flavor = results['flavor'] as String?;
-    final target = results['target'] as String?;
+    final flavor = results[flavorCliArg] as String?;
+    final target = results[targetCliArg] as String?;
     final dartDefines = results['dart-define'] as List<String>?;
     final flutter = await process.start(
       'flutter',

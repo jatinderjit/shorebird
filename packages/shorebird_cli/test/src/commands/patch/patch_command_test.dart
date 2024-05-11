@@ -4,6 +4,7 @@ import 'package:mocktail/mocktail.dart';
 import 'package:scoped/scoped.dart';
 import 'package:shorebird_cli/src/archive_analysis/archive_analysis.dart';
 import 'package:shorebird_cli/src/archive_analysis/archive_differ.dart';
+import 'package:shorebird_cli/src/args/args.dart';
 import 'package:shorebird_cli/src/artifact_builder.dart';
 import 'package:shorebird_cli/src/artifact_manager.dart';
 import 'package:shorebird_cli/src/cache.dart';
@@ -143,9 +144,9 @@ void main() {
       shorebirdEnv = MockShorebirdEnv();
       shorebirdFlutter = MockShorebirdFlutter();
 
-      when(() => argResults['dry-run']).thenReturn(false);
-      when(() => argResults['platforms']).thenReturn(['android']);
-      when(() => argResults['release-version']).thenReturn(releaseVersion);
+      when(() => argResults[dryRunCliArg]).thenReturn(false);
+      when(() => argResults[platformsCliArg]).thenReturn(['android']);
+      when(() => argResults[releaseVersionCliArg]).thenReturn(releaseVersion);
       when(() => argResults.wasParsed(any())).thenReturn(true);
 
       when(aotTools.isLinkDebugInfoSupported).thenAnswer((_) async => true);
@@ -293,7 +294,7 @@ void main() {
       group('when has flavors', () {
         const flavor = 'development';
         setUp(() {
-          when(() => argResults['flavor']).thenReturn(flavor);
+          when(() => argResults[flavorCliArg]).thenReturn(flavor);
         });
 
         test('logs correct summary', () async {
@@ -394,7 +395,7 @@ void main() {
 
     group('when release version is specified', () {
       setUp(() {
-        when(() => argResults['release-version']).thenReturn(releaseVersion);
+        when(() => argResults[releaseVersionCliArg]).thenReturn(releaseVersion);
       });
 
       test('executes commands in order, only builds app once', () async {
@@ -444,7 +445,8 @@ void main() {
 
     group('when release version is not specified', () {
       setUp(() {
-        when(() => argResults.wasParsed('release-version')).thenReturn(false);
+        when(() => argResults.wasParsed(releaseVersionCliArg))
+            .thenReturn(false);
       });
 
       test(
@@ -547,7 +549,7 @@ void main() {
 
     group('when dry-run is specified', () {
       setUp(() {
-        when(() => argResults['dry-run']).thenReturn(true);
+        when(() => argResults[dryRunCliArg]).thenReturn(true);
       });
 
       test('does not publish patch', () async {

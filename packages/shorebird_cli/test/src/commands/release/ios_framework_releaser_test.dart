@@ -4,6 +4,7 @@ import 'package:mocktail/mocktail.dart';
 import 'package:path/path.dart' as p;
 import 'package:platform/platform.dart';
 import 'package:scoped/scoped.dart';
+import 'package:shorebird_cli/src/args/args.dart';
 import 'package:shorebird_cli/src/artifact_builder.dart';
 import 'package:shorebird_cli/src/artifact_manager.dart';
 import 'package:shorebird_cli/src/code_push_client_wrapper.dart';
@@ -125,7 +126,7 @@ void main() {
       group('assertArgsAreValid', () {
         group('when split-per-abi is true', () {
           setUp(() {
-            when(() => argResults.wasParsed('release-version'))
+            when(() => argResults.wasParsed(releaseVersionCliArg))
                 .thenReturn(false);
           });
 
@@ -140,7 +141,7 @@ void main() {
         group('when arguments are valid', () {
           setUp(() {
             when(
-              () => argResults.wasParsed('release-version'),
+              () => argResults.wasParsed(releaseVersionCliArg),
             ).thenReturn(true);
           });
 
@@ -324,7 +325,8 @@ void main() {
       group('getReleaseVersion', () {
         const releaseVersion = '1.0.0';
         setUp(() {
-          when(() => argResults['release-version']).thenReturn(releaseVersion);
+          when(() => argResults[releaseVersionCliArg])
+              .thenReturn(releaseVersion);
         });
 
         test('returns value from argResults', () async {

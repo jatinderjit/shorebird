@@ -1,5 +1,6 @@
 import 'package:mason_logger/mason_logger.dart';
 import 'package:path/path.dart' as p;
+import 'package:shorebird_cli/src/args/args.dart';
 import 'package:shorebird_cli/src/artifact_builder.dart';
 import 'package:shorebird_cli/src/command.dart';
 import 'package:shorebird_cli/src/doctor.dart';
@@ -17,16 +18,16 @@ class BuildIpaCommand extends ShorebirdCommand {
   BuildIpaCommand() {
     argParser
       ..addOption(
-        'target',
+        targetCliArg,
         abbr: 't',
         help: 'The main entrypoint file of the application.',
       )
       ..addOption(
-        'flavor',
+        flavorCliArg,
         help: 'The product flavor to use when building the app.',
       )
       ..addFlag(
-        'codesign',
+        codesignCliArg,
         help:
             '''Codesign the application bundle (only available on device builds).''',
       );
@@ -51,9 +52,9 @@ class BuildIpaCommand extends ShorebirdCommand {
       return e.exitCode.code;
     }
 
-    final flavor = results['flavor'] as String?;
-    final target = results['target'] as String?;
-    final codesign = results['codesign'] as bool;
+    final flavor = results[flavorCliArg] as String?;
+    final target = results[targetCliArg] as String?;
+    final codesign = results[codesignCliArg] as bool;
 
     if (!codesign) {
       logger.warn('''

@@ -5,6 +5,7 @@ import 'package:mason_logger/mason_logger.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:path/path.dart' as p;
 import 'package:scoped/scoped.dart';
+import 'package:shorebird_cli/src/args/args.dart';
 import 'package:shorebird_cli/src/artifact_builder.dart';
 import 'package:shorebird_cli/src/commands/build/build.dart';
 import 'package:shorebird_cli/src/doctor.dart';
@@ -165,8 +166,8 @@ ${lightCyan.wrap(p.join('build', 'app', 'outputs', 'apk', 'release', 'app-releas
         'with flavor and target', () async {
       const flavor = 'development';
       final target = p.join('lib', 'main_development.dart');
-      when(() => argResults['flavor']).thenReturn(flavor);
-      when(() => argResults['target']).thenReturn(target);
+      when(() => argResults[flavorCliArg]).thenReturn(flavor);
+      when(() => argResults[targetCliArg]).thenReturn(target);
       final exitCode = await runWithOverrides(command.run);
 
       expect(exitCode, equals(ExitCode.success.code));

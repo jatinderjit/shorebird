@@ -2,6 +2,7 @@ import 'package:mason_logger/mason_logger.dart';
 import 'package:meta/meta.dart';
 import 'package:scoped/scoped.dart';
 import 'package:shorebird_cli/src/archive_analysis/archive_differ.dart';
+import 'package:shorebird_cli/src/args/args.dart';
 import 'package:shorebird_cli/src/artifact_manager.dart';
 import 'package:shorebird_cli/src/cache.dart';
 import 'package:shorebird_cli/src/code_push_client_wrapper.dart';
@@ -28,7 +29,7 @@ class PatchCommand extends ShorebirdCommand {
     _resolvePatcher = resolvePatcher ?? getPatcher;
     argParser
       ..addMultiOption(
-        'platforms',
+        platformsCliArg,
         abbr: 'p',
         help: 'The platform(s) to to build this release for.',
         allowed: ReleaseType.values.map((e) => e.cliName).toList(),
@@ -36,7 +37,7 @@ class PatchCommand extends ShorebirdCommand {
         // mandatory: true.
       )
       ..addOption(
-        'build-number',
+        buildNumberCliArg,
         help: '''
 An identifier used as an internal version number.
 Each build must have a unique identifier to differentiate it from previous builds.
@@ -46,16 +47,16 @@ On Xcode builds it is used as "CFBundleVersion".''',
         defaultsTo: '1.0',
       )
       ..addOption(
-        'target',
+        targetCliArg,
         abbr: 't',
         help: 'The main entrypoint file of the application.',
       )
       ..addOption(
-        'flavor',
+        flavorCliArg,
         help: 'The product flavor to use when building the app.',
       )
       ..addOption(
-        'release-version',
+        releaseVersionCliArg,
         help: '''
 The version of the associated release (e.g. "1.0.0"). This should be the version
 of the iOS app that is using this module.''',
@@ -81,12 +82,12 @@ of the iOS app that is using this module.''',
             '''Export an IPA with these options. See "xcodebuild -h" for available exportOptionsPlist keys (iOS only).''',
       )
       ..addFlag(
-        'codesign',
+        codesignCliArg,
         help: 'Codesign the application bundle (iOS only).',
         defaultsTo: true,
       )
       ..addFlag(
-        'dry-run',
+        dryRunCliArg,
         abbr: 'n',
         negatable: false,
         help: 'Validate but do not upload the patch.',
@@ -114,10 +115,10 @@ NOTE: this is ${styleBold.wrap('not')} recommended. Asset changes cannot be incl
   String get appId => shorebirdEnv.getShorebirdYaml()!.getAppId(flavor: flavor);
 
   /// The build flavor, if provided.
-  late String? flavor = results.findOption('flavor', argParser: argParser);
+  late String? flavor = results.findOption(flavorCliArg, argParser: argParser);
 
   /// The target script, if provided.
-  late String? target = results.findOption('target', argParser: argParser);
+  late String? target = results.findOption(targetCliArg, argParser: argParser);
 
   bool get isStaging => results['staging'] == true;
 
@@ -179,8 +180,8 @@ NOTE: this is ${styleBold.wrap('not')} recommended. Asset changes cannot be incl
 
     File? patchArtifact;
     final String releaseVersion;
-    if (results.wasParsed('release-version')) {
-      releaseVersion = results['release-version'] as String;
+    if (results.wasParsed(releaseVersionCliArg)) {
+      releaseVersion = results[releaseVersionCliArg] as String;
     } else {
       patchArtifact = await patcher.buildPatchArtifact();
       lastBuiltFlutterRevision = shorebirdEnv.flutterRevision;
@@ -221,7 +222,7 @@ NOTE: this is ${styleBold.wrap('not')} recommended. Asset changes cannot be incl
           releaseId: release.id,
         );
 
-        final dryRun = results['dry-run'] == true;
+        final dryRun = results[dryRunCliArg] == true;
         if (dryRun) {
           logger
             ..info('No issues detected.')

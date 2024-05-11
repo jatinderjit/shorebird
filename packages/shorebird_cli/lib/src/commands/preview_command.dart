@@ -6,6 +6,7 @@ import 'package:archive/archive_io.dart';
 import 'package:collection/collection.dart';
 import 'package:mason_logger/mason_logger.dart';
 import 'package:path/path.dart' as p;
+import 'package:shorebird_cli/src/args/args.dart';
 import 'package:shorebird_cli/src/artifact_manager.dart';
 import 'package:shorebird_cli/src/cache.dart';
 import 'package:shorebird_cli/src/code_push_client_wrapper.dart';
@@ -39,7 +40,7 @@ class PreviewCommand extends ShorebirdCommand {
         help: 'The ID of the app to preview the release for.',
       )
       ..addOption(
-        'release-version',
+        releaseVersionCliArg,
         help: 'The version of the release (e.g. "1.0.0").',
       )
       ..addOption(
@@ -116,7 +117,7 @@ class PreviewCommand extends ShorebirdCommand {
       sideloadableOnly: true,
     );
 
-    final releaseVersion = results['release-version'] as String? ??
+    final releaseVersion = results[releaseVersionCliArg] as String? ??
         await promptForReleaseVersion(releases);
 
     final release = releases.firstWhereOrNull(

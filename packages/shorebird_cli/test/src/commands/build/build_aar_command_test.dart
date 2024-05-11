@@ -3,6 +3,7 @@ import 'package:mason_logger/mason_logger.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:path/path.dart' as p;
 import 'package:scoped/scoped.dart';
+import 'package:shorebird_cli/src/args/args.dart';
 import 'package:shorebird_cli/src/artifact_builder.dart';
 import 'package:shorebird_cli/src/commands/build/build.dart';
 import 'package:shorebird_cli/src/logger.dart';
@@ -45,7 +46,7 @@ void main() {
       shorebirdEnv = MockShorebirdEnv();
       shorebirdValidator = MockShorebirdValidator();
 
-      when(() => argResults['build-number']).thenReturn(buildNumber);
+      when(() => argResults[buildNumberCliArg]).thenReturn(buildNumber);
       when(() => argResults.rest).thenReturn([]);
       when(() => logger.progress(any())).thenReturn(progress);
       when(

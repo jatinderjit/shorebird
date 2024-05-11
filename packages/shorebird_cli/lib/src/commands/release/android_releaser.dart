@@ -1,4 +1,5 @@
 import 'package:mason_logger/mason_logger.dart';
+import 'package:shorebird_cli/src/args/args.dart';
 import 'package:shorebird_cli/src/artifact_builder.dart';
 import 'package:shorebird_cli/src/code_push_client_wrapper.dart';
 import 'package:shorebird_cli/src/commands/release/release.dart';
@@ -38,11 +39,11 @@ class AndroidReleaser extends Releaser {
       .toSet();
 
   /// Whether to generate an APK in addition to the AAB.
-  late bool generateApk = argResults['artifact'] as String == 'apk';
+  late bool generateApk = argResults[artifactCliArg] as String == 'apk';
 
   /// Whether to split the APK per ABI. This is not something we support, but
   /// we check for this to provide a more helpful error message.
-  late bool splitApk = argResults['split-per-abi'] == true;
+  late bool splitApk = argResults[splitPerAbiCliArg] == true;
 
   @override
   Future<void> assertPreconditions() async {
@@ -170,7 +171,7 @@ Please comment and upvote ${link(uri: Uri.parse('https://github.com/shorebirdtec
   Future<UpdateReleaseMetadata> releaseMetadata() async =>
       UpdateReleaseMetadata(
         releasePlatform: releaseType.releasePlatform,
-        flutterVersionOverride: argResults['flutter-version'] as String?,
+        flutterVersionOverride: argResults[flutterVersionCliArg] as String?,
         generatedApks: generateApk,
         environment: BuildEnvironmentMetadata(
           operatingSystem: platform.operatingSystem,

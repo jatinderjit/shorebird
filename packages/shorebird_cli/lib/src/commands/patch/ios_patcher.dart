@@ -6,6 +6,7 @@ import 'package:platform/platform.dart';
 import 'package:shorebird_cli/src/archive/archive.dart';
 import 'package:shorebird_cli/src/archive_analysis/archive_analysis.dart';
 import 'package:shorebird_cli/src/archive_analysis/archive_differ.dart';
+import 'package:shorebird_cli/src/args/args.dart';
 import 'package:shorebird_cli/src/artifact_builder.dart';
 import 'package:shorebird_cli/src/artifact_manager.dart';
 import 'package:shorebird_cli/src/code_push_client_wrapper.dart';
@@ -82,7 +83,7 @@ class IosPatcher extends Patcher {
     }
 
     try {
-      final shouldCodesign = argResults['codesign'] == true;
+      final shouldCodesign = argResults[codesignCliArg] == true;
       final flutterVersionString =
           await shorebirdFlutter.getVersionAndRevision();
       final buildProgress = logger.progress(

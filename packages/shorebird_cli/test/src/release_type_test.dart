@@ -1,4 +1,5 @@
 import 'package:args/args.dart';
+import 'package:shorebird_cli/src/args/args.dart';
 import 'package:shorebird_cli/src/release_type.dart';
 import 'package:shorebird_code_push_client/shorebird_code_push_client.dart';
 import 'package:test/test.dart';
@@ -24,7 +25,7 @@ void main() {
       setUp(() {
         parser = ArgParser()
           ..addMultiOption(
-            'platforms',
+            platformsCliArg,
             allowed: ReleaseType.values.map((e) => e.cliName),
           );
       });
@@ -87,7 +88,7 @@ void main() {
       setUp(() {
         parser = ArgParser()
           ..addMultiOption(
-            'platforms',
+            platformsCliArg,
             allowed: ReleaseType.values.map((e) => e.cliName),
           );
       });

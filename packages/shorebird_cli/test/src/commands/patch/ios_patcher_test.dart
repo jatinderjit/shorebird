@@ -5,6 +5,7 @@ import 'package:path/path.dart' as p;
 import 'package:platform/platform.dart';
 import 'package:scoped/scoped.dart';
 import 'package:shorebird_cli/src/archive_analysis/archive_analysis.dart';
+import 'package:shorebird_cli/src/args/args.dart';
 import 'package:shorebird_cli/src/artifact_builder.dart';
 import 'package:shorebird_cli/src/artifact_manager.dart';
 import 'package:shorebird_cli/src/code_push_client_wrapper.dart';
@@ -118,7 +119,7 @@ void main() {
         shorebirdValidator = MockShorebirdValidator();
         xcodeBuild = MockXcodeBuild();
 
-        when(() => argResults['build-number']).thenReturn('1.0');
+        when(() => argResults[buildNumberCliArg]).thenReturn('1.0');
         when(() => argResults.rest).thenReturn([]);
 
         when(() => logger.progress(any())).thenReturn(progress);

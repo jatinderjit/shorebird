@@ -6,6 +6,7 @@ import 'package:args/args.dart';
 import 'package:mason_logger/mason_logger.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:scoped/scoped.dart';
+import 'package:shorebird_cli/src/args/args.dart';
 import 'package:shorebird_cli/src/commands/run_command.dart';
 import 'package:shorebird_cli/src/doctor.dart';
 import 'package:shorebird_cli/src/logger.dart';
@@ -164,8 +165,8 @@ Please use "shorebird preview" instead.'''),
       const target = './lib/main_development.dart';
       const dartDefines = ['FOO=BAR', 'BAZ=QUX'];
       when(() => argResults['device-id']).thenReturn(deviceId);
-      when(() => argResults['flavor']).thenReturn(flavor);
-      when(() => argResults['target']).thenReturn(target);
+      when(() => argResults[flavorCliArg]).thenReturn(flavor);
+      when(() => argResults[targetCliArg]).thenReturn(target);
       when(() => argResults['dart-define']).thenReturn(dartDefines);
 
       when(() => process.stdout).thenAnswer((_) => const Stream.empty());

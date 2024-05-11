@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:mason_logger/mason_logger.dart';
 import 'package:meta/meta.dart';
 import 'package:scoped/scoped.dart';
+import 'package:shorebird_cli/src/args/args.dart';
 import 'package:shorebird_cli/src/cache.dart';
 import 'package:shorebird_cli/src/code_push_client_wrapper.dart';
 import 'package:shorebird_cli/src/command.dart';
@@ -29,16 +30,16 @@ class ReleaseCommand extends ShorebirdCommand {
     _resolveReleaser = resolveReleaser ?? getReleaser;
     argParser
       ..addOption(
-        'target',
+        targetCliArg,
         abbr: 't',
         help: 'The main entrypoint file of the application.',
       )
       ..addOption(
-        'flavor',
+        flavorCliArg,
         help: 'The product flavor to use when building the app.',
       )
       ..addOption(
-        'build-number',
+        buildNumberCliArg,
         help: '''
 An identifier used as an internal version number.
 Each build must have a unique identifier to differentiate it from previous builds.
@@ -48,12 +49,12 @@ On Xcode builds it is used as "CFBundleVersion".''',
         defaultsTo: '1.0',
       )
       ..addFlag(
-        'codesign',
+        codesignCliArg,
         help: 'Codesign the application bundle (iOS only).',
         defaultsTo: true,
       )
       ..addFlag(
-        'dry-run',
+        dryRunCliArg,
         abbr: 'n',
         negatable: false,
         help: 'Validate but do not upload the release.',
@@ -74,11 +75,11 @@ On Xcode builds it is used as "CFBundleVersion".''',
         },
       )
       ..addOption(
-        'flutter-version',
+        flutterVersionCliArg,
         help: 'The Flutter version to use when building the app (e.g: 3.16.3).',
       )
       ..addOption(
-        'artifact',
+        artifactCliArg,
         help:
             '''The type of artifact to generate. Only relevant for Android releases.''',
         allowed: ['aab', 'apk'],
@@ -89,7 +90,7 @@ On Xcode builds it is used as "CFBundleVersion".''',
         },
       )
       ..addMultiOption(
-        'platforms',
+        platformsCliArg,
         abbr: 'p',
         help: 'The platform(s) to to build this release for.',
         allowed: ReleaseType.values.map((e) => e.cliName).toList(),
@@ -97,14 +98,14 @@ On Xcode builds it is used as "CFBundleVersion".''',
         // mandatory: true.
       )
       ..addFlag(
-        'split-per-abi',
+        splitPerAbiCliArg,
         help: 'Whether to split the APKs per ABIs (Android only). '
             'To learn more, see: https://developer.android.com/studio/build/configure-apk-splits#configure-abi-split',
         hide: true,
         negatable: false,
       )
       ..addOption(
-        'release-version',
+        releaseVersionCliArg,
         help: '''
 The version of the associated release (e.g. "1.0.0"). This should be the version
 of the iOS app that is using this module.''',
@@ -172,13 +173,13 @@ of the iOS app that is using this module.''',
   String get appId => shorebirdEnv.getShorebirdYaml()!.getAppId(flavor: flavor);
 
   /// The build flavor, if provided.
-  late String? flavor = results.findOption('flavor', argParser: argParser);
+  late String? flavor = results.findOption(flavorCliArg, argParser: argParser);
 
   /// The target script, if provided.
-  late String? target = results.findOption('target', argParser: argParser);
+  late String? target = results.findOption(targetCliArg, argParser: argParser);
 
   /// The flutter version specified by the user, if any.
-  late String? flutterVersionArg = results['flutter-version'] as String?;
+  late String? flutterVersionArg = results[flutterVersionCliArg] as String?;
 
   /// The workflow to create a new release for a Shorebird app.
   ///
@@ -224,7 +225,7 @@ of the iOS app that is using this module.''',
           releasePlatform: releaser.releaseType.releasePlatform,
         );
 
-        final dryRun = results['dry-run'] == true;
+        final dryRun = results[dryRunCliArg] == true;
         if (dryRun) {
           logger
             ..info('No issues detected.')

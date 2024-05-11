@@ -4,6 +4,7 @@ import 'package:mocktail/mocktail.dart';
 import 'package:path/path.dart' as p;
 import 'package:platform/platform.dart';
 import 'package:scoped/scoped.dart';
+import 'package:shorebird_cli/src/args/args.dart';
 import 'package:shorebird_cli/src/artifact_builder.dart';
 import 'package:shorebird_cli/src/code_push_client_wrapper.dart';
 import 'package:shorebird_cli/src/commands/release/aar_releaser.dart';
@@ -89,7 +90,7 @@ void main() {
       shorebirdValidator = MockShorebirdValidator();
       shorebirdAndroidArtifacts = MockShorebirdAndroidArtifacts();
 
-      when(() => argResults['build-number']).thenReturn(buildNumber);
+      when(() => argResults[buildNumberCliArg]).thenReturn(buildNumber);
       when(() => argResults['target-platform'])
           .thenReturn(Arch.values.map((a) => a.targetPlatformCliArg).toList());
       when(() => argResults.rest).thenReturn([]);
@@ -200,7 +201,8 @@ void main() {
     group('assertArgsAreValid', () {
       group('when release-version was not provided', () {
         setUp(() {
-          when(() => argResults.wasParsed('release-version')).thenReturn(false);
+          when(() => argResults.wasParsed(releaseVersionCliArg))
+              .thenReturn(false);
         });
 
         test('exits with code 64', () async {
@@ -213,7 +215,8 @@ void main() {
 
       group('when arguments are valid', () {
         setUp(() {
-          when(() => argResults.wasParsed('release-version')).thenReturn(true);
+          when(() => argResults.wasParsed(releaseVersionCliArg))
+              .thenReturn(true);
         });
 
         test('returns normally', () {
@@ -256,7 +259,7 @@ void main() {
       }
 
       setUp(() {
-        when(() => argResults['artifact']).thenReturn('apk');
+        when(() => argResults[artifactCliArg]).thenReturn('apk');
         when(
           () => artifactBuilder.buildAar(
             buildNumber: any(named: 'buildNumber'),
@@ -337,7 +340,7 @@ void main() {
     group('getReleaseVersion', () {
       const releaseVersion = '1.0.0';
       setUp(() {
-        when(() => argResults['release-version']).thenReturn(releaseVersion);
+        when(() => argResults[releaseVersionCliArg]).thenReturn(releaseVersion);
       });
 
       test('returns value from argResults', () async {

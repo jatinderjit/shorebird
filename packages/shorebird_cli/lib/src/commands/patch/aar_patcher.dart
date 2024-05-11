@@ -5,6 +5,7 @@ import 'package:mason_logger/mason_logger.dart';
 import 'package:path/path.dart' as p;
 import 'package:shorebird_cli/src/archive_analysis/android_archive_differ.dart';
 import 'package:shorebird_cli/src/archive_analysis/archive_differ.dart';
+import 'package:shorebird_cli/src/args/args.dart';
 import 'package:shorebird_cli/src/artifact_builder.dart';
 import 'package:shorebird_cli/src/artifact_manager.dart';
 import 'package:shorebird_cli/src/code_push_client_wrapper.dart';
@@ -35,7 +36,7 @@ class AarPatcher extends Patcher {
 
   /// The build number of the aar (1.0). Forwarded to the --build-number
   /// argument of the flutter build aar command.
-  String get buildNumber => argResults['build-number'] as String;
+  String get buildNumber => argResults[buildNumberCliArg] as String;
 
   @override
   ArchiveDiffer get archiveDiffer => AndroidArchiveDiffer();

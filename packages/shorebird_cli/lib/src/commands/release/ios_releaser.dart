@@ -3,6 +3,7 @@ import 'package:path/path.dart' as p;
 import 'package:platform/platform.dart';
 import 'package:pub_semver/pub_semver.dart';
 import 'package:shorebird_cli/src/archive_analysis/plist.dart';
+import 'package:shorebird_cli/src/args/args.dart';
 import 'package:shorebird_cli/src/artifact_builder.dart';
 import 'package:shorebird_cli/src/artifact_manager.dart';
 import 'package:shorebird_cli/src/code_push_client_wrapper.dart';
@@ -31,7 +32,7 @@ class IosReleaser extends Releaser {
   });
 
   /// Whether to codesign the release.
-  bool get codesign => argResults['codesign'] == true;
+  bool get codesign => argResults[codesignCliArg] == true;
 
   @override
   ReleaseType get releaseType => ReleaseType.ios;
@@ -63,7 +64,7 @@ class IosReleaser extends Releaser {
       exit(e.exitCode.code);
     }
 
-    final flutterVersionArg = argResults['flutter-version'] as String?;
+    final flutterVersionArg = argResults[flutterVersionCliArg] as String?;
     if (flutterVersionArg != null) {
       if (Version.parse(flutterVersionArg) <
           minimumSupportedIosFlutterVersion) {
@@ -207,7 +208,7 @@ ${styleBold.wrap('Make sure to uncheck "Manage Version and Build Number", or els
   Future<UpdateReleaseMetadata> releaseMetadata() async =>
       UpdateReleaseMetadata(
         releasePlatform: releaseType.releasePlatform,
-        flutterVersionOverride: argResults['flutter-version'] as String?,
+        flutterVersionOverride: argResults[flutterVersionCliArg] as String?,
         generatedApks: false,
         environment: BuildEnvironmentMetadata(
           operatingSystem: platform.operatingSystem,

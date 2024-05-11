@@ -2,6 +2,7 @@ import 'package:io/io.dart';
 import 'package:mason_logger/mason_logger.dart';
 import 'package:path/path.dart' as p;
 import 'package:platform/platform.dart';
+import 'package:shorebird_cli/src/args/args.dart';
 import 'package:shorebird_cli/src/artifact_builder.dart';
 import 'package:shorebird_cli/src/artifact_manager.dart';
 import 'package:shorebird_cli/src/code_push_client_wrapper.dart';
@@ -41,7 +42,7 @@ class IosFrameworkReleaser extends Releaser {
 
   @override
   Future<void> assertArgsAreValid() async {
-    if (!argResults.wasParsed('release-version')) {
+    if (!argResults.wasParsed(releaseVersionCliArg)) {
       logger.err('Missing required argument: --release-version');
       exit(ExitCode.usage.code);
     }
@@ -113,7 +114,7 @@ class IosFrameworkReleaser extends Releaser {
   Future<String> getReleaseVersion({
     required FileSystemEntity releaseArtifactRoot,
   }) async {
-    return argResults['release-version'] as String;
+    return argResults[releaseVersionCliArg] as String;
   }
 
   @override
@@ -147,7 +148,7 @@ Instructions for these steps can be found at https://docs.flutter.dev/add-to-app
   Future<UpdateReleaseMetadata> releaseMetadata() async =>
       UpdateReleaseMetadata(
         releasePlatform: releaseType.releasePlatform,
-        flutterVersionOverride: argResults['flutter-version'] as String?,
+        flutterVersionOverride: argResults[flutterVersionCliArg] as String?,
         generatedApks: false,
         environment: BuildEnvironmentMetadata(
           operatingSystem: platform.operatingSystem,

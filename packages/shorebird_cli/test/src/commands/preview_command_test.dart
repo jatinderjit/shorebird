@@ -9,6 +9,7 @@ import 'package:mocktail/mocktail.dart';
 import 'package:path/path.dart' as p;
 import 'package:platform/platform.dart';
 import 'package:scoped/scoped.dart';
+import 'package:shorebird_cli/src/args/args.dart';
 import 'package:shorebird_cli/src/artifact_manager.dart';
 import 'package:shorebird_cli/src/auth/auth.dart';
 import 'package:shorebird_cli/src/cache.dart';
@@ -114,7 +115,7 @@ void main() {
 
       when(() => argResults.wasParsed('app-id')).thenReturn(true);
       when(() => argResults['app-id']).thenReturn(appId);
-      when(() => argResults['release-version']).thenReturn(releaseVersion);
+      when(() => argResults[releaseVersionCliArg]).thenReturn(releaseVersion);
       when(() => argResults['staging']).thenReturn(false);
       when(() => auth.isAuthenticated).thenReturn(true);
       when(() => cache.getPreviewDirectory(any())).thenReturn(previewDirectory);
@@ -826,7 +827,7 @@ channel: ${track.channel}
       });
 
       test('exits early when no releases are found', () async {
-        when(() => argResults['release-version']).thenReturn(null);
+        when(() => argResults[releaseVersionCliArg]).thenReturn(null);
         when(
           () => codePushClientWrapper.getReleases(
             appId: any(named: 'appId'),
@@ -861,7 +862,7 @@ channel: ${track.channel}
           ),
         ).thenAnswer(createShorebirdYaml);
 
-        when(() => argResults['release-version']).thenReturn(null);
+        when(() => argResults[releaseVersionCliArg]).thenReturn(null);
         when(
           () => logger.chooseOne<Release>(
             any(),

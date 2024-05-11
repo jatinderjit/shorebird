@@ -1,5 +1,6 @@
 import 'package:args/args.dart';
 import 'package:collection/collection.dart';
+import 'package:shorebird_cli/src/args/args.dart';
 import 'package:shorebird_code_push_client/shorebird_code_push_client.dart';
 
 /// The different types of shorebird releases that can be created.
@@ -51,8 +52,8 @@ bool _isPlatform(String platform) =>
 extension ReleaseTypeArgs on ArgResults {
   Iterable<ReleaseType> get releaseTypes {
     final List<String> releaseTypeCliNames;
-    if (wasParsed('platforms')) {
-      releaseTypeCliNames = this['platforms'] as List<String>;
+    if (wasParsed(platformsCliArg)) {
+      releaseTypeCliNames = this[platformsCliArg] as List<String>;
     } else {
       final platformCliName = arguments.first;
       if (ReleaseType.values

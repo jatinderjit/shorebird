@@ -2,6 +2,7 @@ import 'package:archive/archive_io.dart';
 import 'package:io/io.dart';
 import 'package:mason_logger/mason_logger.dart';
 import 'package:path/path.dart' as p;
+import 'package:shorebird_cli/src/args/args.dart';
 import 'package:shorebird_cli/src/artifact_builder.dart';
 import 'package:shorebird_cli/src/code_push_client_wrapper.dart';
 import 'package:shorebird_cli/src/commands/release/releaser.dart';
@@ -30,7 +31,7 @@ class AarReleaser extends Releaser {
 
   /// The build number of the aar (1.0). Forwarded to the --build-number
   /// argument of the flutter build aar command.
-  String get buildNumber => argResults['build-number'] as String;
+  String get buildNumber => argResults[buildNumberCliArg] as String;
 
   Set<Arch> get architectures => (argResults['target-platform'] as List<String>)
       .map(
@@ -64,7 +65,7 @@ class AarReleaser extends Releaser {
 
   @override
   Future<void> assertArgsAreValid() async {
-    if (!argResults.wasParsed('release-version')) {
+    if (!argResults.wasParsed(releaseVersionCliArg)) {
       logger.err('Missing required argument: --release-version');
       exit(ExitCode.usage.code);
     }
@@ -111,7 +112,7 @@ class AarReleaser extends Releaser {
   Future<String> getReleaseVersion({
     required FileSystemEntity releaseArtifactRoot,
   }) async {
-    return argResults['release-version'] as String;
+    return argResults[releaseVersionCliArg] as String;
   }
 
   @override
@@ -144,7 +145,7 @@ class AarReleaser extends Releaser {
   Future<UpdateReleaseMetadata> releaseMetadata() async =>
       UpdateReleaseMetadata(
         releasePlatform: releaseType.releasePlatform,
-        flutterVersionOverride: argResults['flutter-version'] as String?,
+        flutterVersionOverride: argResults[flutterVersionCliArg] as String?,
         generatedApks: false,
         environment: BuildEnvironmentMetadata(
           operatingSystem: platform.operatingSystem,
