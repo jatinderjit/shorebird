@@ -113,6 +113,8 @@ Please comment and upvote ${link(uri: Uri.parse('https://github.com/shorebirdtec
     ShorebirdTracer.startTracing();
     await artifactBuilder.runPubget();
     ShorebirdTracer.endTracing('runPubget');
+
+    ShorebirdTracer.startTracing();
     try {
       aab = await artifactBuilder.buildAppBundle(
         flavor: flavor,
@@ -125,6 +127,7 @@ Please comment and upvote ${link(uri: Uri.parse('https://github.com/shorebirdtec
       buildAppBundleProgress.fail(e.message);
       throw ProcessExit(ExitCode.software.code);
     }
+    ShorebirdTracer.endTracing('buildAppBundle');
 
     buildAppBundleProgress.complete();
 

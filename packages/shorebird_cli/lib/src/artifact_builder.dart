@@ -12,7 +12,6 @@ import 'package:shorebird_cli/src/shorebird_android_artifacts.dart';
 import 'package:shorebird_cli/src/shorebird_artifacts.dart';
 import 'package:shorebird_cli/src/shorebird_env.dart';
 import 'package:shorebird_cli/src/shorebird_process.dart';
-import 'package:shorebird_cli/src/shorebird_tracer.dart';
 
 /// Used to wrap code that invokes `flutter build` with Shorebird's fork of
 /// Flutter.
@@ -374,9 +373,7 @@ Please file a bug at https://github.com/shorebirdtech/shorebird/issues/new with 
     try {
       await command();
     } finally {
-      ShorebirdTracer.startTracing();
       await _systemFlutterPubGet();
-      ShorebirdTracer.endTracing('system flutter pub get');
     }
   }
 
