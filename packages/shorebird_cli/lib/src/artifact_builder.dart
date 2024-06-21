@@ -12,6 +12,7 @@ import 'package:shorebird_cli/src/shorebird_android_artifacts.dart';
 import 'package:shorebird_cli/src/shorebird_artifacts.dart';
 import 'package:shorebird_cli/src/shorebird_env.dart';
 import 'package:shorebird_cli/src/shorebird_process.dart';
+import 'package:shorebird_cli/src/shorebird_tracer.dart';
 
 /// Used to wrap code that invokes `flutter build` with Shorebird's fork of
 /// Flutter.
@@ -109,12 +110,14 @@ class ArtifactBuilder {
         ...args,
       ];
 
+      ShorebirdTracer.startTracing();
       final result = await process.run(
         executable,
         arguments,
         runInShell: true,
         environment: base64PublicKey?.toPublicKeyEnv(),
       );
+      ShorebirdTracer.endTracing('buildAppBundle');
 
       if (result.exitCode != ExitCode.success.code) {
         throw ArtifactBuildException(
