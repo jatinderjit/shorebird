@@ -109,6 +109,11 @@ Please comment and upvote ${link(uri: Uri.parse('https://github.com/shorebirdtec
 
     final base64PublicKey = argResults.encodedPublicKey;
 
+
+    ShorebirdTracer.startTracing();
+    await artifactBuilder.runPubget();
+    ShorebirdTracer.endTracing('runPubget');
+
     ShorebirdTracer.startTracing();
     try {
       aab = await artifactBuilder.buildAppBundle(

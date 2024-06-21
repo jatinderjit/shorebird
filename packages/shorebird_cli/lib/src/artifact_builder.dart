@@ -76,6 +76,15 @@ extension on String {
 /// Builds aabs, ipas, and other artifacts produced by `flutter build`.
 /// @{endtemplate}
 class ArtifactBuilder {
+  ///
+  Future<void> runPubget() async {
+    await process.run(
+      'flutter',
+      ['pub', 'get'],
+      runInShell: true,
+    );
+  }
+
   /// Builds an aab using `flutter build appbundle`. Runs `flutter pub get` with
   /// the system installation of Flutter to reset
   /// `.dart_tool/package_config.json` after the build completes or fails.
@@ -93,6 +102,7 @@ class ArtifactBuilder {
         'build',
         'appbundle',
         '--release',
+        '--no-pub',
         if (flavor != null) '--flavor=$flavor',
         if (target != null) '--target=$target',
         if (targetPlatformArgs != null) '--target-platform=$targetPlatformArgs',
