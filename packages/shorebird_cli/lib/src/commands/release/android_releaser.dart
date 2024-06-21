@@ -156,10 +156,7 @@ Please comment and upvote ${link(uri: Uri.parse('https://github.com/shorebirdtec
     final String releaseVersion;
 
     try {
-      releaseVersion =
-          await shorebirdAndroidArtifacts.extractReleaseVersionFromAppBundle(
-        releaseArtifactRoot.path,
-      );
+      releaseVersion = '2.2.2+${DateTime.now().millisecondsSinceEpoch}';
       releaseVersionProgress.complete('Release version: $releaseVersion');
     } catch (error) {
       releaseVersionProgress.fail('$error');
