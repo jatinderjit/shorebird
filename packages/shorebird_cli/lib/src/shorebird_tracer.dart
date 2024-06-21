@@ -4,7 +4,7 @@ import 'dart:io';
 
 class ShorebirdTracer {
 
-  static final _traceFile = File('${const String.fromEnvironment('HOME')}/.shorebird_trace.log');
+  static final _traceFile = File('.shorebird_trace.log');
 
   static DateTime? _startTime;
 
