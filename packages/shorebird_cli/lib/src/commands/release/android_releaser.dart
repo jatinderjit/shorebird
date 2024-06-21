@@ -13,6 +13,7 @@ import 'package:shorebird_cli/src/platform/platform.dart';
 import 'package:shorebird_cli/src/release_type.dart';
 import 'package:shorebird_cli/src/shorebird_android_artifacts.dart';
 import 'package:shorebird_cli/src/shorebird_flutter.dart';
+import 'package:shorebird_cli/src/shorebird_tracer.dart';
 import 'package:shorebird_cli/src/shorebird_validator.dart';
 import 'package:shorebird_cli/src/third_party/flutter_tools/lib/flutter_tools.dart';
 import 'package:shorebird_cli/src/version.dart';
@@ -108,6 +109,7 @@ Please comment and upvote ${link(uri: Uri.parse('https://github.com/shorebirdtec
 
     final base64PublicKey = argResults.encodedPublicKey;
 
+    ShorebirdTracer.startTracing();
     try {
       aab = await artifactBuilder.buildAppBundle(
         flavor: flavor,
@@ -120,6 +122,7 @@ Please comment and upvote ${link(uri: Uri.parse('https://github.com/shorebirdtec
       buildAppBundleProgress.fail(e.message);
       throw ProcessExit(ExitCode.software.code);
     }
+    ShorebirdTracer.endTracing('buildAppBundle');
 
     buildAppBundleProgress.complete();
 
