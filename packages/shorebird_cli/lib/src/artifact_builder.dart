@@ -119,7 +119,6 @@ class ArtifactBuilder {
         runInShell: true,
         environment: base64PublicKey?.toPublicKeyEnv(),
       );
-      ShorebirdTracer.endTracing('buildAppBundle');
 
       final stderr = StringBuffer();
       final stderrSub =
@@ -132,6 +131,7 @@ class ArtifactBuilder {
           .listen(flutterBuildAnalyzer.processLine);
 
       final exitCode = await spawnedProcess.exitCode;
+      ShorebirdTracer.endTracing('buildAppBundle');
 
       await (stderrSub.cancel(), stdoutSub.cancel()).wait;
 
