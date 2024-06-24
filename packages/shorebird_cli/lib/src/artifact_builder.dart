@@ -1,9 +1,11 @@
 // cspell:words endtemplate aabs ipas appbundle bryanoltman codesign xcarchive
 // cspell:words xcframework
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:mason_logger/mason_logger.dart';
 import 'package:scoped_deps/scoped_deps.dart';
+import 'package:shorebird_cli/src/build_analyzer/flutter_build_analyzer.dart';
 import 'package:shorebird_cli/src/extensions/shorebird_process_result.dart';
 import 'package:shorebird_cli/src/logger.dart';
 import 'package:shorebird_cli/src/os/operating_system_interface.dart';
@@ -111,7 +113,7 @@ class ArtifactBuilder {
       ];
 
       ShorebirdTracer.startTracing();
-      final result = await process.run(
+      final spawnedProcess = await process.start(
         executable,
         arguments,
         runInShell: true,
@@ -119,9 +121,23 @@ class ArtifactBuilder {
       );
       ShorebirdTracer.endTracing('buildAppBundle');
 
-      if (result.exitCode != ExitCode.success.code) {
+      final stderr = StringBuffer();
+      final stderrSub =
+          spawnedProcess.stderr.map(utf8.decode).listen(stderr.write);
+
+      final flutterBuildAnalyzer = FlutterBuildAnalyzer();
+
+      final stdoutSub = spawnedProcess.stdout
+          .map(utf8.decode)
+          .listen(flutterBuildAnalyzer.processLine);
+
+      final exitCode = await spawnedProcess.exitCode;
+
+      await (stderrSub.cancel(), stdoutSub.cancel()).wait;
+
+      if (exitCode != ExitCode.success.code) {
         throw ArtifactBuildException(
-          'Failed to build: ${result.stderr}',
+          'Failed to build: $stderr',
         );
       }
     });
