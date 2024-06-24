@@ -135,6 +135,8 @@ class ArtifactBuilder {
 
       await (stderrSub.cancel(), stdoutSub.cancel()).wait;
 
+      flutterBuildAnalyzer.saveToFile();
+
       if (exitCode != ExitCode.success.code) {
         throw ArtifactBuildException(
           'Failed to build: $stderr',

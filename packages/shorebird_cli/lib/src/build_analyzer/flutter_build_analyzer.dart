@@ -44,7 +44,10 @@ class FlutterBuildAnalyzer {
     File('.shorebird_build_times.log')
         // Intentionally not using writeAsStringSync to avoid blocking
         // the process
-        .writeAsString(_timeMap.toString());
+        .writeAsString(
+      '''${_timeMap.entries.map((entry) => '${entry.key} - ${entry.value}').join('\n')}\n\n''',
+      mode: FileMode.append,
+    );
   }
 
   Map<String, int> get times => UnmodifiableMapView(_timeMap);
